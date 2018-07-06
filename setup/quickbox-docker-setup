@@ -112,7 +112,7 @@ function _checkroot() {
 # check if create log function (3)
 function _logcheck() {
   echo -ne "${bold}${yellow}Do you wish to write to a log file?${normal} (Default: ${green}${bold}Y${normal}) ";
-    case {{ .Env.QUICKBOX_WRITE_TO_LOG_FILE }} in
+    case "${QUICKBOX_WRITE_TO_LOG_FILE}" in
       [yY] | [yY][Ee][Ss] | "" ) OUTTO="/root/quickbox.$PPID.log";echo "${bold}Output is being sent to /root/quickbox.${magenta}$PPID${normal}${bold}.log${normal}" ;;
       [nN] | [nN][Oo] ) OUTTO="/dev/null 2>&1";echo "${cyan}NO output will be logged${normal}" ;;
     *) OUTTO="/root/quickbox.$PPID.log";echo "${bold}Output is being sent to /root/quickbox.${magenta}$PPID${normal}${bold}.log${normal}" ;;
@@ -126,10 +126,10 @@ function _logcheck() {
 # setting system hostname function (7)
 function _hostname() {
 echo -ne "Please enter a hostname for this server (${bold}Hit ${standout}${green}ENTER${normal} to make no changes${normal}): " ;
-if [[ -z {{ .Env.QUICKBOX_HOSTNAME }} ]]; then
+if [[ -z "${QUICKBOX_HOSTNAME}" ]]; then
         echo "No hostname supplied, no changes made!!"
 else
-        hostname {{ .Env.QUICKBOX_HOSTNAME }}
+        hostname "${QUICKBOX_HOSTNAME}" 
         echo "${input}">/etc/hostname
         echo "127.0.0.1 ${input}">/etc/hosts
         echo "Hostname set to ${input}"
@@ -143,7 +143,7 @@ echo
 
 function _askquota() {
   echo -ne "${bold}${yellow}Do you wish to use user quotas?${normal} (Default: ${green}${bold}Y${normal}) ";
-    case {{ .Env.QUICKBOX_USER_QUOTA }} in
+    case "${QUICKBOX_USER_QUOTA}" in
       [yY] | [yY][Ee][Ss] | "" ) quota="yes";echo "${bold}Quotas will be installed${normal}" ;;
       [nN] | [nN][Oo] ) quota="no";echo "${cyan}Quotas will not be installed${normal}" ;;
     *) quota="yes";echo "${bold}Quotas will be installed${normal}" ;;
@@ -152,7 +152,7 @@ function _askquota() {
 
 function _ask10g() {
   echo -ne "${bold}${yellow}Is this a 10 gigabit server?${normal} (Default: ${green}${bold}N${normal}) ";
-    case {{ .Env.QUICKBOX_TEN_GIGABIT }} in
+    case "${QUICKBOX_TEN_GIGABIT}" in
       [yY] | [yY][Ee][Ss] )   if [[ -d /install ]]; then cd /; else mkdir /install; fi;touch /install/.10g.lock;echo "${bold}The devs are officially jealous${normal}" ;;
       [nN] | [nN][Oo] | "" ) echo "${cyan}Who can afford that stuff anyway?${normal}" ;;
     *)  echo "${cyan}Who can afford that stuff anyway?${normal}"  ;;
@@ -231,7 +231,7 @@ function _askservices() {
   echo "You are running $DISTRO $CODENAME"
   echo "This distribution has support for systemd services. "
   echo "Would you like to enable? (recommended) (Default: ${green}${bold}Y${normal})";
-    case {{ .Env.QUICKBOX_ENABLE_SYSTEMD }}in
+    case "${QUICKBOX_ENABLE_SYSTEMD}" in
       [yY] | [yY][Ee][Ss] | "" ) cron="no";echo "${bold}Using systemd for process management${normal}" ;;
       [nN] | [nN][Oo] ) cron="yes";echo "${cyan}Cron will manage your processes${normal}" ;;
     *) cron="no";echo "${bold}Using systemd for process management${normal}" ;;
@@ -339,7 +339,7 @@ function _askvsftpd() {
   if [[ -z "$input" ]]; then
     IP=$DEFAULTIP
   else
-    IP={{ .Env.QUICKBOX_PUBLIC_IP }}
+    IP="${QUICKBOX_PUBLIC_IP}" 
   fi
   
   echo
